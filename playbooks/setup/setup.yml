@@ -1,0 +1,27 @@
+---
+
+- hosts: all
+  gather_facts: True
+  become: True
+
+  pre_tasks:
+    - name: refresh inventory
+      meta: refresh_inventory
+
+  roles:
+    - { role: boto }
+    - { role: etc_hosts }
+    - { role: rhn }
+    - { role: git }
+
+- hosts: nfs
+  gather_facts: True
+  become: True
+
+  pre_tasks:
+    - name: refresh inventory
+      meta: refresh_inventory
+
+  roles:
+    - { role: nfs }
+

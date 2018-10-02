@@ -1,0 +1,111 @@
+---
+
+- name: Provision OCP Masters
+  ec2:
+     key_name: 'aws-ocp-keypair'
+     group_id: 'sg-8c4e06ea'
+     instance_type: 'm3.large'
+     aws_access_key: "{{ aws_access_key }}"
+     aws_secret_key: "{{ aws_secret_key }}"
+     image: "{{ aws_ami_id }}"
+     region: "{{ aws_region }}"
+     wait: true
+     exact_count: 1
+     count_tag: 'ocp_master'
+     instance_tags:
+        env: 'ocp_master'
+        Name: "{{ item }}"
+  with_items: "{{ master_nodes }}"
+  register: ec2_masters
+
+- name: Provision OCP Infrastructure Nodes
+  ec2:
+     key_name: 'aws-ocp-keypair'
+     group_id: 'sg-8c4e06ea'
+     instance_type: 'm3.large'
+     aws_access_key: "{{ aws_access_key }}"
+     aws_secret_key: "{{ aws_secret_key }}"
+     image: "{{ aws_ami_id }}"
+     region: "{{ aws_region }}"
+     wait: true
+     exact_count: 1
+     count_tag: 'ocp_infra'
+     instance_tags:
+        env: 'ocp_infra'
+        Name: "{{ item }}"
+        "kubernetes.io/cluster/{{openshift_node_labels[cluster]}}": 'owned'
+  with_items: "{{ infra_nodes }}"
+  register: ec2_infra
+
+- name: Provision OCP Application Nodes
+  ec2:
+     key_name: 'aws-ocp-keypair'
+     group_id: 'sg-8c4e06ea'
+     instance_type: 't3.medium'
+     aws_access_key: "{{ aws_access_key }}"
+     aws_secret_key: "{{ aws_secret_key }}"
+     image: "{{ aws_ami_id }}"
+     region: "{{ aws_region }}"
+     wait: true
+     exact_count: 1
+     count_tag: 'ocp_app'
+     instance_tags:
+        env: 'ocp_app'
+        Name: "{{ item }}"
+  with_items: "{{ app_nodes }}"
+  register: ec2_app
+
+- name: Provision OCP Loadbalancer Nodes
+  ec2:
+     key_name: 'aws-ocp-keypair'
+     group_id: 'sg-8c4e06ea'
+     instance_type: 't2.micro'
+     aws_access_key: "{{ aws_access_key }}"
+     aws_secret_key: "{{ aws_secret_key }}"
+     image: "{{ aws_ami_id }}"
+     region: "{{ aws_region }}"
+     wait: true
+     exact_count: 1
+     count_tag: 'ocp_lb'
+     instance_tags:
+        env: 'ocp_lb'
+        Name: "{{ item }}"
+  with_items: "{{ lb_nodes }}"
+  register: ec2_lb
+
+- name: Provision OCP Support Nodes
+  ec2:
+     key_name: 'aws-ocp-keypair'
+     group_id: 'sg-8c4e06ea'
+     instance_type: 't2.micro'
+     aws_access_key: "{{ aws_access_key }}"
+     aws_secret_key: "{{ aws_secret_key }}"
+     image: "{{ aws_ami_id }}"
+     region: "{{ aws_region }}"
+     wait: true
+     exact_count: 1
+     count_tag: 'ocp_support'
+     instance_tags:
+        env: 'ocp_support'
+        Name: "{{ item }}"
+  with_items: "{{ support_nodes }}"
+  register: ec2_support
+
+
+- name: Wait for ssh to come up
+  wait_for:
+    host: "{{ item.instances[0].public_dns_name }}"
+    port: 22
+    delay: 10
+    timeout: 300
+  with_items:
+    - "{{ ec2_masters.results }}"
+    - "{{ ec2_infra.results }}"
+    - "{{ ec2_app.results }}"
+    - "{{ ec2_lb.results }}"
+    - "{{ ec2_support.results }}"
+
+- name: Sleep for 3 minutes to allow EC2 instances to initalize
+  pause:
+    minutes: 3
+

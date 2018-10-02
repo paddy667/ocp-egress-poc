@@ -1,0 +1,13 @@
+---
+###########################################################################
+#### OpenShift Logging Ops
+############################################################################
+openshift_loggingops_storage_volume_name: 'logging-es-ops'
+openshift_loggingops_storage_volume_size: '10Gi'
+openshift_loggingops_storage_create_pv: True
+openshift_loggingops_storage_create_pvc: False
+openshift_loggingops_storage_nfs_directory: '/srv/nfs'
+openshift_loggingops_storage_host: 'support1.phmcmahon.com'
+openshift_loggingops_storage_nfs_options: '*(rw,root_squash)'
+openshift_loggingops_storage_access_modes:
+  - 'ReadWriteOnce'

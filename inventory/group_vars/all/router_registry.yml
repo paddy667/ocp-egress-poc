@@ -1,0 +1,20 @@
+---
+
+###########################################################################
+### OpenShift Router and Registry Vars
+###########################################################################
+
+openshift_hosted_router_selector: 'env=infra' 
+openshift_hosted_router_replicas: 2
+
+openshift_hosted_registry_selector: 'env=infra' 
+openshift_hosted_registry_replicas: 1 
+
+openshift_hosted_registry_storage_kind: 'nfs' 
+openshift_hosted_registry_storage_access_modes: 
+  - 'ReadWriteMany'
+openshift_hosted_registry_storage_nfs_directory: '/srv/nfs'
+openshift_hosted_registry_storage_nfs_options: '*(rw,root_squash)'
+openshift_hosted_registry_storage_host: 'support1.phmcmahon.com'
+openshift_hosted_registry_storage_volume_name: 'registry'
+openshift_hosted_registry_storage_volume_size: '20Gi'

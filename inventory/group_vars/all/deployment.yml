@@ -1,0 +1,12 @@
+---
+
+###########################################################################
+### Deployment vars
+###########################################################################
+
+containerized: "false"
+deployment_type: "openshift-enterprise"
+openshift_hosted_infra_selector: 'env=infra'
+osm_default_node_selector: "env=app"
+openshift_disable_check: "disk_availability,memory_availability"
+

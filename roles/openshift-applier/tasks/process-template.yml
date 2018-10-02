@@ -1,0 +1,66 @@
+---
+
+- name: "Reset Command Line Options"
+  set_fact:
+    oc_param_file_option: []
+    oc_param_option: ''
+
+- name: "Pre-process params file (if applicable)"
+  block:
+  - stat:
+      path: "{{ tmp_inv_dir }}{{ params }}"
+    ignore_errors: yes
+    register: params_result
+  - fail:
+      msg: "{{ params }} - params file doesn't exist."
+    when:
+    - params_result.stat.exists == False
+  # Append '/*' if this is a directory as we'd want it to expand to all files in the dir
+  - set_fact:
+      params: "{{ params }}/*"
+    when:
+    - params_result.stat.isdir
+  # Build a list of '--param-file' command line paramters to iterate
+  - set_fact:
+      oc_param_file_option: "{{ oc_param_file_option + [ ' --param-file=' + item ] }}"
+    with_fileglob:
+    - "{{ tmp_inv_dir }}{{ params }}"
+  when:
+  - params|trim != ''
+
+- name: "Change 'params_from_vars' fact (if applicable) into command line parameters"
+  set_fact:
+    oc_param_option: "{{ oc_param_option }} --param='{{ item.key }}={{ item.value }}'"
+  with_dict: "{{ params_from_vars }}"
+
+# This call sets the 'oc_process_local', 'oc_option_f' and 'oc_file_path' parameters
+- name: "Determine location for the 'template'"
+  set_fact:
+    template_facts: "{{ template | check_file_location(tmp_inv_dir) }}"
+
+
+- name: "{{ oc_action | capitalize }} OpenShift objects based on template with params for '{{ entry.object}} : {{ content.name | default(template | basename) }}'"
+  shell: >
+    oc process \
+       {{ template_facts['oc_process_local'] }} \
+       {{ template_facts['oc_option_f'] }} {{ template_facts['oc_file_path'] }} \
+       {{ target_namespace }} \
+       {{ oc_param_option }} \
+       {{ oc_param_file_item }} \
+       {{ oc_ignore_unknown_parameters | ternary('--ignore-unknown-parameters', '') }} \
+       | \
+    oc {{ oc_action }} \
+       {{ target_namespace }} \
+       -f - \
+       {{ (oc_action == 'delete') | ternary(' --ignore-not-found', '') }}
+  register: command_result
+  no_log: "{{ no_log }}"
+  failed_when:
+  - command_result.rc != 0
+  - "'AlreadyExists' not in command_result.stderr"
+  # If the array is empty, make sure to run the loop at least once
+  # - the "['']" will enforce that it run at least once
+  with_items:
+  - "{{ (oc_param_file_option|length > 0) | ternary(oc_param_file_option, ['']) }}"
+  loop_control:
+    loop_var: 'oc_param_file_item'

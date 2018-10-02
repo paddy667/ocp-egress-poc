@@ -1,0 +1,16 @@
+---
+
+- name: Register to Redhat 
+  redhat_subscription:
+    state: present
+    username: "{{ rhn_username }}"
+    password: "{{ rhn_password }}"
+    pool_ids: "{{ rhn_pool_ids }}"
+
+- name: Enable the openshift 3.9 repository
+  rhsm_repository:
+    name: "{{ item }}"
+  with_items:
+    - 'rhel-7-server-ose-3.9-rpms'
+    - 'rhel-7-server-extras-rpms'
+    - 'rhel-7-fast-datapath-rpms'

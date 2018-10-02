@@ -1,0 +1,5 @@
+---
+
+openshift_hostname: support1.phmcmahon.com
+openshift_node_group_name: 'node-config-compute'
+

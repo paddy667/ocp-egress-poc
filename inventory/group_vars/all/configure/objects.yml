@@ -1,0 +1,76 @@
+---
+
+openshift_cluster_content:
+- object: PersistentVolume
+  content:
+  - name: "pv_5Gi_ReadWriteOnce"
+    file: "pv/pv_5Gi_ReadWriteOnce"
+    action: create
+  - name: "pv_10Gi_ReadWriteMany"
+    file: "pv/pv_10Gi_ReadWriteMany"
+    action: create
+- object: namespace
+  content:
+  - name: cicd
+    template: "projects/projects.template"
+    params_from_vars: "{{ cicd }}"
+    action: create
+  - name: cicd-dev
+    template: "projects/projects.template"
+    params_from_vars: "{{ cicd_dev }}"
+    action: create
+  - name: cicd-test
+    template: "projects/projects.template"
+    params_from_vars: "{{ cicd_test }}"
+    action: create
+  - name: cicd-prod
+    template: "projects/projects.template"
+    params_from_vars: "{{ cicd_prod }}"
+    action: create
+- object: Template
+  content:
+  - name: jenkins
+    namespace: cicd
+    template: "apps/jenkins.yml"
+    params_from_vars:
+      ENABLE_OAUTH: false
+    action: create
+- object: Policy
+  content:
+  - name: jenkins cicd-dev access
+    namespace: cicd-dev
+    template: "policy/rbac_template.yml"
+    params_from_vars: "{{ cicd_jenkins_edit }}"
+    action: create
+  - name: jenkins cicd-test access
+    namespace: cicd-test
+    template: "policy/rbac_template.yml"
+    params_from_vars: "{{ cicd_jenkins_edit }}"
+    action: create
+  - name: jenkins cicd-prod access
+    namespace: cicd-prod
+    template: "policy/rbac_template.yml"
+    params_from_vars: "{{ cicd_jenkins_edit }}"
+    action: create  
+  - name: cicd-test image-puller 
+    namespace: cicd-dev
+    template: "policy/rbac_template.yml"
+    params_from_vars: "{{ cicd_jenkins_edit }}"
+    action: create
+  - name: cicd-prod image-puller 
+    namespace: cicd-dev
+    template: "policy/rbac_template.yml"
+    params_from_vars: "{{ cicd_jenkins_edit }}"
+    action: create
+- object: NetworkPolicy
+  content:
+  - name: ingress-to-jenkins-cicd-from-outside
+    namespace: cicd
+    file: 'networkpolicy/allow_jenkins.yml'
+    action: create
+#- object: HorizontalPodAutoscaler
+#  content:
+#    - name: tasks-hpa
+#      file: "hpa/hpa_template.yml"
+#      action: create
+

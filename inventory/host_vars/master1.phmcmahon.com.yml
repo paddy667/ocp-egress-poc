@@ -1,0 +1,5 @@
+---
+
+openshift_hostname: master1.phmcmahon.com
+openshift_node_group_name: 'node-config-master'
+

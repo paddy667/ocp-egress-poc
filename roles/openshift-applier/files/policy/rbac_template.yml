@@ -1,0 +1,32 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: 'add-role-to-user'
+objects:
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: ${NAME}
+  roleRef:
+    name: ${ROLE}
+  subjects:
+  - kind: ${KIND}
+    name: ${USER_OR_GROUP}
+parameters:    
+- name: NAME
+  displayName: Name
+  description: The name of the policy binding
+  required: true
+- name: KIND
+  displayName: Kind
+  description: The kind of object to add to the role (user, group, serviceaccount etc.) 
+  required: true
+- name: ROLE
+  displayName: Role
+  description: The role to bind to the user
+  required: true
+  value: edit
+- name: USER_OR_GROUP
+  displayName: User_or_Group
+  description: The user/group to bind the role to
+  required: true

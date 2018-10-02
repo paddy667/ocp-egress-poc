@@ -1,0 +1,62 @@
+apiVersion: v1
+items:
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    name: "os-pipeline"
+  spec:
+    triggers:
+          - github:
+              secret: l3wUgp0o
+            type: GitHub
+          - generic:
+              secret: CNMLKIk6
+            type: Generic
+    strategy:
+      type: "JenkinsPipeline"
+      jenkinsPipelineStrategy:
+        jenkinsfile: |
+          node {
+            stage ("BUILD")
+                 echo "START BUILD"
+                 openshiftBuild bldCfg: 'os-tasks', buildName: '', checkForTriggeredDeployments: 'false', commitID: '', namespace: '', showBuildLogs: 'false', verbose: 'false', waitTime: ''
+                 openshiftVerifyBuild apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', bldCfg: 'os-tasks', checkForTriggeredDeployments: 'false', namespace: '', verbose: 'false'
+                 echo "BUILD DONE"
+
+            stage ("DEPLOY AND VERIFY IN DEV ENV")
+
+                 echo "START DEV DEPLOY"
+                 openshiftDeploy apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'os-tasks', namespace: '', verbose: 'false', waitTime: ''
+                 openshiftVerifyDeployment apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'os-tasks', namespace: '', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: ''
+                 echo "DEV DEPLOY DONE"
+
+                 echo "START DEV SERVICE CHECK"
+                 openshiftVerifyService apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', namespace: 'cicd-dev', svcName: 'os-tasks', verbose: 'false'
+                 echo "DEV SERVICE CHECK DONE"
+                 openshiftTag(srcStream: 'os-tasks', srcTag: 'latest', destStream: 'os-tasks', destTag: 'testready')
+
+            stage ("DEPLOY AND TEST IN TEST ENV")
+                 echo "START TEST DEPLOY TO cicd-test PROJECT"
+                 openshiftDeploy apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'os-tasks', namespace: 'cicd-test', verbose: 'false', waitTime: ''
+                 echo "TEST DEPLOY DONE"
+
+                 echo "START TEST SERVICE CHECK"
+                 openshiftVerifyDeployment apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'os-tasks', namespace: 'cicd-test', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: '10'
+                 echo "START TEST SERVICE CHECK DONE"
+
+            stage ("PROMOTE AND VERIFY IN PROD ENV")
+
+                 echo "START DEPLOY TO PROD"
+                 openshiftDeploy apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'os-tasks', namespace: 'cicd-prod', verbose: 'false', waitTime: ''
+                 echo "DEPLOY TO PROD DONE"
+
+                 echo "START PROD SERVICE CHECK"
+                 openshiftVerifyDeployment apiURL: 'https://openshift.default.svc.cluster.local', authToken: '', depCfg: 'os-tasks', namespace: 'cicd-prod', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'false', waitTime: '10'
+                 echo "PROD SERVICE CHECK DONE"
+
+                 sleep 30
+                 sh 'curl -i -u "redhat:redhat1!" -H "Content-Length: 0" -X POST http://os-tasks-cicd-dev.apps.{GUID}.example.opentlc.com/ws/tasks/task1 | grep Created'
+          }
+
+kind: List
+metadata: {}

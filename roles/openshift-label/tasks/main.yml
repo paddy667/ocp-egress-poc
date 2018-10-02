@@ -1,0 +1,7 @@
+---
+
+- name: Openshift label project
+  command: >
+   oc label --overwrite namespace {{ item.Project }} {{ item.Label }}
+  with_items: "{{ project_labels }}"
+  

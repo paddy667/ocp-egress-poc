@@ -1,0 +1,2 @@
+
+/srv/nfs/user-vols/pv${pvnum} *(rw,root_squash)

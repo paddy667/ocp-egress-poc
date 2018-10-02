@@ -1,0 +1,35 @@
+---
+
+# Define some projects
+cicd_dev:
+  NAMESPACE: cicd-dev
+  NAMESPACE_DISPLAY_NAME: cicd-dev
+  LABEL: 'project=cicd-dev'
+cicd_prod:
+  NAMESPACE: cicd-prod
+  NAMESPACE_DISPLAY_NAME: cicd-prod
+  LABEL: 'project=cicd-prod'
+cicd_test:
+  NAMESPACE: cicd-test
+  NAMESPACE_DISPLAY_NAME: cicd-test
+  LABEL: 'project=cicd-tes'
+cicd:
+  NAMESPACE: cicd
+  NAMESPACE_DISPLAY_NAME: cicd
+  LABEL: 'project=cicd'
+default-project:
+  NAMESPACE: default
+  NAMESPACE_DISPLAY_NAME: default
+  LABEL: 'project=default'
+
+project_labels:
+  - Project: cicd-dev
+    Label: 'project=cicd-dev'
+  - Project: cicd-test
+    Label: 'project=cicd-test'
+  - Project: cicd-prod
+    Label: 'project=cicd-prod'
+  - Project: default
+    Label: 'project=default'
+
+

@@ -1,0 +1,7 @@
+---
+###########################################################################
+#### RBAC Values
+###########################################################################
+
+osm_project_request_message: 'Please create project using the portal http://portal.9e95.internal/provision or contact Karla at karla@example.com'
+

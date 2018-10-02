@@ -1,0 +1,70 @@
+---
+
+openshift_project_request_template_namespace: default
+openshift_project_request_template_name: default-project-template
+openshift_project_request_template_manage: True
+osm_project_request_template: default/default-project-template
+
+openshift_project_request_template_edits:
+  - key: objects
+    action: append
+    value:
+      kind: NetworkPolicy
+      apiVersion: extensions/v1beta1
+      metadata:
+        name: allow-same-and-default-namespace
+      spec:
+        ingress:
+        - from:
+          - podSelector: {}
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                name: default
+  - key: objects
+    action: append
+    value:
+      kind: NetworkPolicy
+      apiVersion: extensions/v1beta1
+      metadata:
+        name: default-deny
+      spec:
+        podSelector: {}
+  - key: objects
+    action: append
+    value:
+      apiVersion: v1
+      kind: ResourceQuota
+      metadata:
+        name: project-default-quota
+      spec:
+        hard:
+          cpu: "2"
+          memory: 6Gi
+  - key: objects
+    action: append
+    value:
+      apiVersion: v1
+      kind: LimitRange
+      metadata:
+        name: project-default-limits
+      spec:
+        limits:
+        - max:
+            cpu: 200m
+            memory: 2Gi
+          min:
+            cpu: 10m
+            memory: 128Mi
+          type: Pod
+        - default:
+            cpu: 50m
+            memory: 256Mi
+          max:
+            cpu: 200m
+            memory: 2Gi
+          min:
+            cpu: 20m
+            memory: 256Mi
+          type: Container
+

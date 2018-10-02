@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: tasks-hpa
+spec:
+  scaleRef:
+    kind: DeploymentConfig 
+    name: tasks-bc
+    apiVersion: v1 
+    subresource: scale
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization:
+    targetPercentage: 70
+

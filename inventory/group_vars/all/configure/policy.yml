@@ -1,0 +1,20 @@
+---
+
+cicd_jenkins_edit:
+  KIND: 'User'
+  NAME: 'jenkins-edit-cicd'
+  USER_OR_GROUP: 'system:serviceaccounts:cicd:jenkins'
+  ROLE: 'edit'
+
+cicd_test_image_puller:
+  KIND: 'User'
+  NAME: 'cicd-test image puller'
+  USER_OR_GROUP: 'system:serviceaccounts:cdcd-test'
+  ROLE: 'system:image-puller'
+
+cicd_prod_image_puller:
+  KIND: 'User'
+  NAME: 'cicd-prod image puller'
+  USER_OR_GROUP: 'system:serviceaccounts:cdcd-prod'
+  ROLE: 'system:image-puller'
+

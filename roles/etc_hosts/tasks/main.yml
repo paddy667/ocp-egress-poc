@@ -1,0 +1,23 @@
+---
+
+- name: Get facts about ec2 ocp instances
+  ec2_instance_facts:
+    region: "{{ aws_region }}"
+    filters:
+      "tag:env": ocp*
+      instance-state-name: 'running'
+  delegate_to: localhost
+  register: ec2_facts
+
+- name: Set hostname
+  hostname:
+    name: "{{ openshift_hostname }}"
+
+- name: Deploy /etc/hosts
+  template:
+    src: etc_host.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644 
+

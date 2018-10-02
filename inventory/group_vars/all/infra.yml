@@ -1,0 +1,17 @@
+---
+
+master_nodes:
+  - master1.phmcmahon.com
+  - master2.phmcmahon.com
+  - master3.phmcmahon.com
+infra_nodes:
+  - infra1.phmcmahon.com
+  - infra2.phmcmahon.com
+app_nodes:
+  - node1.phmcmahon.com
+  - node2.phmcmahon.com
+support_nodes:
+  - support1.phmcmahon.com
+lb_nodes:
+  - lb.phmcmahon.com
+

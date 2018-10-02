@@ -1,0 +1,49 @@
+---
+
+- name: Install NFS
+  yum:
+    name: nfs-utils
+    state: present
+
+- name: Enable NFS
+  systemd:
+    name: nfs
+    state: started
+    enabled: yes
+
+- name: Create /srv/nfs directory
+  file:
+    dest: /srv/nfs
+    state: directory
+    owner: nfsnobody
+    group: nfsnobody
+    mode: 0755
+
+- name: Create /srv/nfs/user-vols directories
+  file:
+    dest: "/srv/nfs/user-vols/{{ item }}"
+    state: directory
+    owner: nfsnobody
+    group: nfsnobody
+    mode: 0755
+  with_items: "{{ pvs }}"
+
+- name: Deploy exports.d fragments
+  copy:
+    src: exports.d/ansible-srv-nfs.exports
+    dest: /etc/exports.d/
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nfs
+
+- name: Deploy exports.d fragments for user vols
+  template:
+    src: exports.d/ansible-user-vols.exports.j2
+    dest: /etc/exports.d/
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nfs
+
+

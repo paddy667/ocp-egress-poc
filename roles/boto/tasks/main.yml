@@ -1,0 +1,24 @@
+---
+
+# Deploy the Boto config used for the ec2 dynamic inventory
+# Only run on local host
+
+- name: Install boto pip modules for AWS
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - boto
+    - boto3
+  run_once: true
+  delegate_to: localhost
+  
+
+- name: Deploy boto config
+  template:
+    src: boto.j2
+    dest: /etc/boto.cfg
+    owner: root
+    group: root
+    mode: 0644
+  run_once: true
+  delegate_to: localhost

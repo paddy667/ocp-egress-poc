@@ -1,0 +1,3 @@
+{% for pv in pvs %}
+/srv/nfs/user-vols/{{ pv }} *(rw,root_squash)
+{% endfor %}

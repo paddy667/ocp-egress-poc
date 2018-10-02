@@ -1,0 +1,13 @@
+---
+###########################################################################
+#### OpenShift etcd
+############################################################################
+openshift_hosted_etcd_storage_nfs_directory: '/srv/nfs'
+openshift_hosted_etcd_storage_host: 'support1.phmcmahon.com'
+openshift_hosted_etcd_storage_nfs_options: '*(rw,root_squash)'
+openshift_hosted_etcd_storage_volume_name: 'etcd'
+openshift_hosted_etcd_storage_volume_size: '1Gi'
+openshift_hosted_etcd_storage_create_pv: True
+openshift_hosted_etcd_storage_create_pvc: False
+openshift_hosted_etcd_storage_access_modes:
+  - 'ReadWriteOnce'

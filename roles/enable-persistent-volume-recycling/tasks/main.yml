@@ -1,0 +1,8 @@
+---
+
+- name: Pull the docker recycler image
+  command: 'docker pull registry.access.redhat.com/openshift3/ose-recycler:latest'
+
+- name: Tag the docker recycler image
+  command: 'docker tag registry.access.redhat.com/openshift3/ose-recycler:latest registry.access.redhat.com/openshift3/ose-recycler:v3.10.14'
+

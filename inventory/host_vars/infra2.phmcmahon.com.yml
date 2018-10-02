@@ -1,0 +1,4 @@
+---
+
+openshift_hostname: infra2.phmcmahon.com
+openshift_node_group_name: 'node-config-infra'

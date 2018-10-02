@@ -1,0 +1,12 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-global-namespaces
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          pod.network.openshift.io/legacy-netid: "0"
+  podSelector:
+

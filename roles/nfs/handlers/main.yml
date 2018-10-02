@@ -1,0 +1,7 @@
+---
+
+- name: reload nfs
+  systemd:
+    name: nfs
+    state: reloaded
+
