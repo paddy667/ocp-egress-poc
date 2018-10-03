@@ -2,9 +2,5 @@
 - hosts: nodes
   become: True
 
-  pre_tasks:
-    - name: refresh inventory
-      meta: refresh_inventory
-
   roles:
     - {role: enable-persistent-volume-recycling }
