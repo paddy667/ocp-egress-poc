@@ -22,19 +22,19 @@ lb.phmcmahon.com
 
 [masters]
 master1.phmcmahon.com
-master2.phmcmahon.com
-master3.phmcmahon.com
+#master2.phmcmahon.com
+#master3.phmcmahon.com
 
 [etcd]
 master1.phmcmahon.com
-master2.phmcmahon.com
-master3.phmcmahon.com
+#master2.phmcmahon.com
+#master3.phmcmahon.com
 
 [nodes]
 ## These are the masters
 master1.phmcmahon.com
-master2.phmcmahon.com
-master3.phmcmahon.com
+#master2.phmcmahon.com
+#master3.phmcmahon.com
 
 ## These are infranodes
 infra1.phmcmahon.com
@@ -42,7 +42,7 @@ infra2.phmcmahon.com
 
 ## These are regular nodes
 node1.phmcmahon.com
-node2.phmcmahon.com
+#node2.phmcmahon.com
 
 [nfs]
 support1.phmcmahon.com

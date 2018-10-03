@@ -6,7 +6,7 @@
 
 # Enable cluster metrics
 
-openshift_metrics_install_metrics: 'True' 
+openshift_metrics_install_metrics: 'False' 
 
 openshift_metrics_storage_kind: 'nfs' 
 openshift_metrics_storage_access_modes: 
@@ -27,7 +27,7 @@ openshift_metrics_heapster_nodeselector:
 
 # Enable cluster logging
 
-openshift_logging_install_logging: 'True' 
+openshift_logging_install_logging: 'False' 
 
 openshift_logging_storage_kind: 'nfs'
 openshift_logging_storage_access_modes: 
