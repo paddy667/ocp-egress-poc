@@ -2,3 +2,6 @@
 
 openshift_hostname: node2.phmcmahon.com
 openshift_node_group_name: 'node-config-compute'
+openshift_node_labels:
+  env: 'app'
+  cluster: '6e8e'

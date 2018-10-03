@@ -2,4 +2,6 @@
 
 openshift_hostname: master3.phmcmahon.com
 openshift_node_group_name: 'node-config-master'
-
+openshift_node_labels:
+  env: 'master'
+  cluster: '6e8e'
