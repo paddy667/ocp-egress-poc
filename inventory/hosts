@@ -16,6 +16,7 @@ masters
 etcd
 nodes
 nfs
+new_nodes
 
 [lb]
 lb.phmcmahon.com
@@ -43,6 +44,10 @@ infra2.phmcmahon.com
 ## These are regular nodes
 node1.phmcmahon.com
 #node2.phmcmahon.com
+
+[new_nodes]
+infra3.phmcmahon.com
+infra4.phmcmahon.com
 
 [nfs]
 support1.phmcmahon.com

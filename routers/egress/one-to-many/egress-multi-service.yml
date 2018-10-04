@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: egress-multi-service
+spec:
+  ports:
+  - name: google
+    port: 80
+  - name: get-ip
+    port: 555
+  - name: db
+    port: 3306
+  type: ClusterIP
+  selector:
+    name: egress-multi-router
+

@@ -1,0 +1,7 @@
+---
+
+openshift_hostname: infra4.phmcmahon.com
+openshift_node_group_name: 'node-config-infra'
+openshift_node_labels:
+  env: 'infra'
+  cluster: '6e8e'

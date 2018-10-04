@@ -5,13 +5,13 @@
   become: True
 
   roles:
-    - { role: rhn }
+    #- { role: rhn }
     - { role: git }
 
-- hosts: nfs
-  gather_facts: True
-  become: True
-
-  roles:
-    - { role: nfs }
+#- hosts: nfs
+#  gather_facts: True
+#  become: True
+#
+#  roles:
+#    - { role: nfs }
 

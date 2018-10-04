@@ -4,6 +4,7 @@
 ### Deployment vars
 ###########################################################################
 
+openshift_release: 'v3.9.43'
 containerized: "false"
 deployment_type: "openshift-enterprise"
 openshift_hosted_infra_selector: 'env=infra'
